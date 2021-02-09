@@ -51,7 +51,9 @@
               "apps/testapp/src/favicon.ico",
               "apps/testapp/src/assets"
             ],
-            "styles": ["apps/testapp/src/styles.scss"],
+            "styles": [
+              "apps/testapp/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -112,7 +114,9 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/testapp"],
+          "outputs": [
+            "coverage/apps/testapp"
+          ],
           "options": {
             "jestConfig": "apps/testapp/jest.config.js",
             "passWithNoTests": true
@@ -141,7 +145,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/testapp-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/testapp-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
@@ -163,10 +169,70 @@
         },
         "test": {
           "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/libs/testlib"],
+          "outputs": [
+            "coverage/libs/testlib"
+          ],
           "options": {
             "jestConfig": "libs/testlib/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/testlib/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/testlib",
+            "config": {
+              "configFolder": "libs/testlib/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        }
+      }
+    },
+    "testlib-e2e": {
+      "root": "apps/testlib-e2e",
+      "sourceRoot": "apps/testlib-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/testlib-e2e/cypress.json",
+            "tsConfig": "apps/testlib-e2e/tsconfig.e2e.json",
+            "devServerTarget": "testlib:storybook"
+          },
+          "configurations": {
+            "ci": {
+              "devServerTarget": "testlib:storybook:ci"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/testlib-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
